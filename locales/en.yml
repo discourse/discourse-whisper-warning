@@ -1,5 +1,5 @@
 en:
   theme_metadata:
     description: "This component better distinguishes a public reply from a whisper."
-  public_reply: "publicly replying"
+  public_reply: "reply will be visible"
   whispering: "whispering"
