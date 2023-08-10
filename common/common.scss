@@ -1,0 +1,21 @@
+#reply-control .reply-to .whisper-hint {
+  margin: 0;
+  padding: 2px 4px;
+  font-size: var(--font-down-2);
+  &.whispering {
+    color: var(--secondary);
+    background-color: var(--primary-low-mid);
+    opacity: 0.85;
+    .d-icon {
+      color: var(--secondary);
+    }
+  }
+  &.public {
+    color: var(--secondary);
+    background-color: var(--quaternary);
+    opacity: 0.75;
+    .d-icon {
+      color: var(--secondary);
+    }
+  }
+}
