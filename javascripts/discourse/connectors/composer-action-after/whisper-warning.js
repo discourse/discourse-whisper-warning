@@ -5,7 +5,6 @@ export default class WhisperWarning extends Component {
   @service currentUser;
 
   get shouldRender() {
-    console.log(this.args.outletArgs.model);
     const canWhisper = this.currentUser.whisperer;
     const isNotNewTopic = this.args.outletArgs.model.get("action") !== "createTopic";
     const isNotNewPM = this.args.outletArgs.model.get("action") !== "privateMessage";
