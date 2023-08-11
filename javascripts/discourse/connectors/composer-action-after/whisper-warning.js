@@ -5,12 +5,16 @@ export default class WhisperWarning extends Component {
   @service currentUser;
 
   get shouldRender() {
+    
+    const groupMember = this.currentUser.groups.filter((group) => {
+      return group.name === "accidentalloudmouths";
+    }).length > 0;
     const canWhisper = this.currentUser.whisperer;
     const isNotNewTopic = this.args.outletArgs.model.get("action") !== "createTopic";
     const isNotNewPM = this.args.outletArgs.model.get("action") !== "privateMessage";
     const isNotSharedDraft = this.args.outletArgs.model.get("action") !== "createSharedDraft";
 
-    return canWhisper && isNotNewTopic && isNotNewPM && isNotSharedDraft;
+    return canWhisper && isNotNewTopic && isNotNewPM && isNotSharedDraft && groupMember;
   }
 
   get isWhispering() {
