@@ -1,21 +1,24 @@
 #reply-control .reply-to .whisper-hint {
-  margin: 0;
-  padding: 2px 4px;
+  margin: 0 0 0 1em;
+  padding: 2px 8px;
   font-size: var(--font-down-2);
+  border-radius: 10px;
   &.whispering {
-    color: var(--secondary);
-    background-color: var(--primary-low-mid);
-    opacity: 0.85;
+    color: var(--tertiary);
+    background-color: var(--tertiary-low);
+    box-shadow: 0px 0px 0px 2px var(--tertiary-medium);
+    opacity: 0.75;
     .d-icon {
-      color: var(--secondary);
+      color: var(--tertiary);
     }
   }
   &.public {
-    color: var(--secondary);
-    background-color: var(--quaternary);
+    color: darken($color: goldenrod, $amount: 20);
+    background-color: gold;
+    box-shadow: 0px 0px 0px 2px darken($color: goldenrod, $amount: 5);
     opacity: 0.75;
     .d-icon {
-      color: var(--secondary);
+      color: darken($color: goldenrod, $amount: 20);
     }
   }
 }
