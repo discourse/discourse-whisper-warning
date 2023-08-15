@@ -9,21 +9,23 @@ export default class WhisperWarning extends Component {
     const allowedGroups =
       this.args.outletArgs.model.topic?.get("allowedGroups");
     // to check if reply is in a PM
-    const isPM = this.args.outletArgs.model.topic?.get("archetype") === "private_message";
+    const isPM =
+      this.args.outletArgs.model.topic?.get("archetype") === "private_message";
     // checks to make sure user is in group that PM is added to
-    const isInGroup =
-      this.currentUser.groups.filter(group => {
-        for (let allowedGroup of allowedGroups) {
-          if (group.name === allowedGroup.name) {
-            return group;
+    const isInGroup = allowedGroups
+      ? this.currentUser.groups?.filter(group => {
+          for (let allowedGroup of allowedGroups) {
+            if (group.name === allowedGroup.name) {
+              return group;
+            }
           }
-        }
-      }).length > 0;
+        }).length > 0
+      : false;
 
     const readRestricted =
       this.args.outletArgs.model.category?.get("read_restricted");
     const groupMember =
-      this.currentUser.groups.filter(group => {
+      this.currentUser.groups?.filter(group => {
         return group.name === "accidentalloudmouths";
       }).length > 0;
     const canWhisper = this.currentUser.whisperer;
@@ -35,12 +37,12 @@ export default class WhisperWarning extends Component {
       this.args.outletArgs.model.get("action") !== "createSharedDraft";
 
     return (
-      canWhisper &&
-      isNotNewTopic &&
-      isNotNewPM &&
-      isNotSharedDraft &&
-      groupMember &&
-      readRestricted ||
+      (canWhisper &&
+        isNotNewTopic &&
+        isNotNewPM &&
+        isNotSharedDraft &&
+        groupMember &&
+        readRestricted) ||
       (isPM && isInGroup)
     );
   }
