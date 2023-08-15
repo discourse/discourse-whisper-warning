@@ -12,7 +12,7 @@ export default class WhisperWarning extends Component {
     const isPM =
       this.args.outletArgs.model.topic?.get("archetype") === "private_message";
     // checks to make sure user is in group that PM is added to
-    const isInGroup = allowedGroups
+    const isInInboxGroup = allowedGroups
       ? this.currentUser.groups?.filter(group => {
           for (let allowedGroup of allowedGroups) {
             if (group.name === allowedGroup.name) {
@@ -24,7 +24,7 @@ export default class WhisperWarning extends Component {
 
     const readRestricted =
       this.args.outletArgs.model.category?.get("read_restricted");
-    const groupMember =
+    const isWhisperWarningGroupMember =
       this.currentUser.groups?.filter(group => {
         return group.name === "accidentalloudmouths";
       }).length > 0;
@@ -41,9 +41,9 @@ export default class WhisperWarning extends Component {
         isNotNewTopic &&
         isNotNewPM &&
         isNotSharedDraft &&
-        groupMember &&
+        isWhisperWarningGroupMember &&
         readRestricted) ||
-      (isPM && isInGroup)
+      (isPM && isInInboxGroup && canWhisper && isWhisperWarningGroupMember)
     );
   }
 
