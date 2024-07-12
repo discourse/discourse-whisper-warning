@@ -1,14 +1,15 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import I18n from "discourse-common/helpers/i18n";
 
 export default class WhisperWarning extends Component {
   @service currentUser;
   @service composer;
 
-get showWarning() {
+  get showWarning() {
     // checks if the current user is replying in a group PM
     const allowedGroups =
       this.args.outletArgs.model.topic?.get("allowedGroups");
@@ -69,11 +70,14 @@ get showWarning() {
         @preventFocus={{true}}
         @action={{this.toggleWhisper}}
         @icon="far-eye-slash"
-        @class={{concatClass "whisper-hint" (if this.composer.isWhispering "whispering" "public")}}
-        @translatedLabel={{(if this.composer.isWhispering this.whisperLabel this.publicLabel)}}
+        @class={{concatClass
+          "whisper-hint"
+          (if this.composer.isWhispering "whispering" "public")
+        }}
+        @translatedLabel={{(if
+          this.composer.isWhispering this.whisperLabel this.publicLabel
+        )}}
       />
     {{/if}}
   </template>
 }
-
-  
