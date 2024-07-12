@@ -3,6 +3,9 @@
   padding: 2px 8px;
   font-size: var(--font-down-2);
   border-radius: 10px;
+  .d-icon {
+    margin-right: 4px;
+  }
   &.whispering {
     color: var(--tertiary);
     background-color: var(--tertiary-low);

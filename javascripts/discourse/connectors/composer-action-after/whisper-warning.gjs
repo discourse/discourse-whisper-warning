@@ -1,10 +1,14 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
 
 export default class WhisperWarning extends Component {
   @service currentUser;
+  @service composer;
 
-  get shouldRender() {
+get shouldRender() {
     // checks if the current user is replying in a group PM
     const allowedGroups =
       this.args.outletArgs.model.topic?.get("allowedGroups");
@@ -28,7 +32,7 @@ export default class WhisperWarning extends Component {
       this.currentUser.groups?.filter(group => {
         return group.name === "accidentalloudmouths";
       }).length > 0;
-    const canWhisper = this.currentUser.whisperer;
+    const canWhisper = this.composer.showWhisperToggle;
     const isNotNewTopic =
       this.args.outletArgs.model.get("action") !== "createTopic";
     const isNotNewPM =
@@ -47,16 +51,26 @@ export default class WhisperWarning extends Component {
     );
   }
 
-  get isWhispering() {
-    let whisper = this.args.outletArgs.model.get("whisper");
-    return whisper;
-  }
-
-  get publicLabel() {
-    return I18n.t(themePrefix("public_reply"));
-  }
-
   get whisperLabel() {
-    return I18n.t(themePrefix("whispering"));
+    return this.composer.isWhispering ? I18n.t(themePrefix("whispering")) : I18n.t(themePrefix("public_reply"));
   }
+
+  @action
+  toggleWhisper() {
+    this.composer.toggleWhisper();
+  }
+
+  <template>
+    {{#if this.shouldRender}}
+      <DButton
+        @preventFocus={{true}}
+        @action={{this.toggleWhisper}}
+        @icon="far-eye-slash"
+        @class={{concatClass "whisper-hint" (if this.composer.isWhispering "whispering" "public")}}
+        @label={{this.whisperLabel}}
+      />
+    {{/if}}
+  </template>
 }
+
+  
