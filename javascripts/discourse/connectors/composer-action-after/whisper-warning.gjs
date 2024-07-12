@@ -52,7 +52,11 @@ get shouldRender() {
   }
 
   get whisperLabel() {
-    return this.composer.isWhispering ? I18n.t(themePrefix("whispering")) : I18n.t(themePrefix("public_reply"));
+    return I18n.t(themePrefix("whispering"));
+  }
+
+  get publicLabel() {
+    return I18n.t(themePrefix("public_reply"));
   }
 
   @action
@@ -67,7 +71,7 @@ get shouldRender() {
         @action={{this.toggleWhisper}}
         @icon="far-eye-slash"
         @class={{concatClass "whisper-hint" (if this.composer.isWhispering "whispering" "public")}}
-        @label={{this.whisperLabel}}
+        @label={{(if this.composer.isWhispering this.whisperLabel this.publicLabel)}}
       />
     {{/if}}
   </template>
