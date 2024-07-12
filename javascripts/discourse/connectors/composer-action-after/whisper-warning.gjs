@@ -8,7 +8,7 @@ export default class WhisperWarning extends Component {
   @service currentUser;
   @service composer;
 
-get shouldRender() {
+get showWarning() {
     // checks if the current user is replying in a group PM
     const allowedGroups =
       this.args.outletArgs.model.topic?.get("allowedGroups");
@@ -63,15 +63,14 @@ get shouldRender() {
   toggleWhisper() {
     this.composer.toggleWhisper();
   }
-
   <template>
-    {{#if this.shouldRender}}
+    {{#if this.showWarning}}
       <DButton
         @preventFocus={{true}}
         @action={{this.toggleWhisper}}
         @icon="far-eye-slash"
         @class={{concatClass "whisper-hint" (if this.composer.isWhispering "whispering" "public")}}
-        @label={{(if this.composer.isWhispering this.whisperLabel this.publicLabel)}}
+        @translatedLabel={{(if this.composer.isWhispering this.whisperLabel this.publicLabel)}}
       />
     {{/if}}
   </template>
