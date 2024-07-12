@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import I18n from "discourse-common/helpers/i18n";
+import I18n from "I18n";
 
 export default class WhisperWarning extends Component {
   @service currentUser;
