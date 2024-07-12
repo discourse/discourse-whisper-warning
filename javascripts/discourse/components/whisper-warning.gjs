@@ -53,11 +53,11 @@ export default class WhisperWarning extends Component {
   }
 
   get translatedLabel() {
-   if (this.composer.isWhispering) {
-     return I18n.t(themePrefix("whispering"));
-   } else {
-     return I18n.t(themePrefix("public_reply"));
-   }
+    if (this.composer.isWhispering) {
+      return I18n.t(themePrefix("whispering"));
+    } else {
+      return I18n.t(themePrefix("public_reply"));
+    }
   }
 
   @action
