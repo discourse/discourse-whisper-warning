@@ -74,9 +74,7 @@ export default class WhisperWarning extends Component {
           "whisper-hint"
           (if this.composer.isWhispering "whispering" "public")
         }}
-        @translatedLabel={{{(if
-          this.composer.isWhispering this.whisperLabel this.publicLabel
-        )}}}
+        @translatedLabel={{this.translatedLabel}}
       />
     {{/if}}
   </template>
