@@ -17,7 +17,7 @@ get showWarning() {
       this.args.outletArgs.model.topic?.get("archetype") === "private_message";
     // checks to make sure user is in group that PM is added to
     const isInInboxGroup = allowedGroups
-      ? this.currentUser.groups?.filter(group => {
+      ? this.currentUser.groups?.filter((group) => {
           for (let allowedGroup of allowedGroups) {
             if (group.name === allowedGroup.name) {
               return group;
@@ -29,7 +29,7 @@ get showWarning() {
     const readRestricted =
       this.args.outletArgs.model.category?.get("read_restricted");
     const isWhisperWarningGroupMember =
-      this.currentUser.groups?.filter(group => {
+      this.currentUser.groups?.filter((group) => {
         return group.name === "accidentalloudmouths";
       }).length > 0;
     const canWhisper = this.composer.showWhisperToggle;
