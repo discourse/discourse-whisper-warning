@@ -70,7 +70,7 @@ export default class WhisperWarning extends Component {
         @preventFocus={{true}}
         @action={{this.toggleWhisper}}
         @icon="far-eye-slash"
-        @class={{concatClass
+        class={{concatClass
           "whisper-hint"
           (if this.composer.isWhispering "whispering" "public")
         }}
