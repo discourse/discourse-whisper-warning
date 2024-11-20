@@ -64,6 +64,7 @@ export default class WhisperWarning extends Component {
   toggleWhisper() {
     this.composer.toggleWhisper();
   }
+
   <template>
     {{#if this.showWarning}}
       <DButton
