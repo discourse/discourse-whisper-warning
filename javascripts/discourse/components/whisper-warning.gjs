@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 
 export default class WhisperWarning extends Component {
   @service currentUser;
@@ -54,9 +54,9 @@ export default class WhisperWarning extends Component {
 
   get translatedLabel() {
     if (this.composer.isWhispering) {
-      return I18n.t(themePrefix("whispering"));
+      return i18n(themePrefix("whispering"));
     } else {
-      return I18n.t(themePrefix("public_reply"));
+      return i18n(themePrefix("public_reply"));
     }
   }
 
