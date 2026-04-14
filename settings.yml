@@ -1,31 +1,17 @@
 whisper_only:
   default: false
   type: bool
-  label: "Whisper only"
-  description: "Only show the warning button when composing a whisper; hide it for public replies."
-
 show_in_read_restricted_categories:
   default: true
   type: bool
-  label: "Show in read-restricted categories"
-  description: "Automatically show the warning when replying in categories that are not publicly visible."
-
 show_in_group_pms:
   default: true
   type: bool
-  label: "Show in group PMs"
-  description: "Automatically show the warning when replying in a PM where you are a member of one of the allowed groups."
-
 restrict_to_groups:
   default: ""
   type: list
   list_type: group
-  label: "Restrict to groups"
-  description: "Limit the warning to members of specific groups. Leave empty to show for all users who can whisper."
-
 restrict_to_categories:
   default: ""
   type: list
   list_type: category
-  label: "Restrict to categories"
-  description: "Additional categories where the warning should appear. Works alongside the automatic read-restricted setting."
