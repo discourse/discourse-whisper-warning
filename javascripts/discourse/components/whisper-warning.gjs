@@ -10,46 +10,137 @@ export default class WhisperWarning extends Component {
   @service composer;
 
   get showWarning() {
-    // checks if the current user is replying in a group PM
-    const allowedGroups =
-      this.args.outletArgs.model.topic?.get("allowedGroups");
-    // to check if reply is in a PM
-    const isPM =
-      this.args.outletArgs.model.topic?.get("archetype") === "private_message";
-    // checks to make sure user is in group that PM is added to
-    const isInInboxGroup = allowedGroups
-      ? this.currentUser.groups?.filter((group) => {
-          for (let allowedGroup of allowedGroups) {
-            if (group.name === allowedGroup.name) {
-              return group;
-            }
-          }
-        }).length > 0
-      : false;
+    const model = this.args.outletArgs.model;
+    const composerAction = model.get("action");
 
-    const readRestricted =
-      this.args.outletArgs.model.category?.get("read_restricted");
-    const isWhisperWarningGroupMember =
-      this.currentUser.groups?.filter((group) => {
-        return group.name === "accidentalloudmouths";
-      }).length > 0;
-    const canWhisper = this.composer.showWhisperToggle;
-    const isNotNewTopic =
-      this.args.outletArgs.model.get("action") !== "createTopic";
-    const isNotNewPM =
-      this.args.outletArgs.model.get("action") !== "privateMessage";
-    const isNotSharedDraft =
-      this.args.outletArgs.model.get("action") !== "createSharedDraft";
+    if (
+      !this.composer.showWhisperToggle ||
+      composerAction === "createTopic" ||
+      composerAction === "createSharedDraft"
+    ) {
+      return false;
+    }
 
-    return (
-      (canWhisper &&
-        isNotNewTopic &&
-        isNotNewPM &&
-        isNotSharedDraft &&
-        isWhisperWarningGroupMember &&
-        readRestricted) ||
-      (isPM && isInInboxGroup && canWhisper && isWhisperWarningGroupMember)
+    // Block new PMs (but allow replies to existing PMs)
+    if (composerAction === "privateMessage") {
+      return false;
+    }
+
+    if (!this.isInAllowedGroup) {
+      return false;
+    }
+
+    if (settings.whisper_only && !this.composer.isWhispering) {
+      return false;
+    }
+
+    return this.matchesContext;
+  }
+
+  // At least one context filter must match. If no context filters are
+  // configured, show everywhere.
+  get matchesContext() {
+    const hasAnyContextFilter =
+      settings.show_in_read_restricted_categories ||
+      settings.show_in_group_pms ||
+      this.parseListSetting(settings.restrict_to_categories).length > 0;
+
+    if (!hasAnyContextFilter) {
+      return true;
+    }
+
+    if (settings.show_in_read_restricted_categories && this.isReadRestricted) {
+      return true;
+    }
+
+    if (settings.show_in_group_pms && this.isGroupPMWithUser) {
+      return true;
+    }
+
+    if (this.isInExplicitCategoryList) {
+      return true;
+    }
+
+    return false;
+  }
+
+  get isReadRestricted() {
+    return !!this.args.outletArgs.model.category?.get("read_restricted");
+  }
+
+  get isGroupPMWithUser() {
+    const topic = this.args.outletArgs.model.topic;
+    if (topic?.get("archetype") !== "private_message") {
+      return false;
+    }
+
+    const allowedGroups = topic.get("allowedGroups");
+    if (!allowedGroups) {
+      return false;
+    }
+
+    const userGroups = this.currentUser.groups ?? [];
+    return allowedGroups.some((ag) =>
+      userGroups.some((ug) => ug.name === ag.name)
     );
+  }
+
+  // Returns true if restrict_to_groups is empty, or the current user is a
+  // member of at least one specified group. Matches by both group ID and name
+  // to handle either storage format from the list_type: group setting.
+  get isInAllowedGroup() {
+    const groups = this.parseListSetting(settings.restrict_to_groups);
+
+    if (groups.length === 0) {
+      return true;
+    }
+
+    const userGroups = this.currentUser.groups ?? [];
+    return groups.some((g) => {
+      const asId = Number.parseInt(g, 10);
+      return userGroups.some(
+        (ug) =>
+          ug.name.toLowerCase() === g.toLowerCase() ||
+          (!Number.isNaN(asId) && ug.id === asId)
+      );
+    });
+  }
+
+  // Returns true if the current topic's category is in the explicit
+  // restrict_to_categories list. Matches by both category ID and slug.
+  get isInExplicitCategoryList() {
+    const categories = this.parseListSetting(settings.restrict_to_categories);
+
+    if (categories.length === 0) {
+      return false;
+    }
+
+    const category = this.args.outletArgs.model.category;
+    if (!category) {
+      return false;
+    }
+
+    const catId = category.get ? category.get("id") : category.id;
+    const catSlug = category.get ? category.get("slug") : category.slug;
+
+    return categories.some((c) => {
+      const asId = Number.parseInt(c, 10);
+      return (
+        (catSlug && catSlug.toLowerCase() === c.toLowerCase()) ||
+        (!Number.isNaN(asId) && catId === asId)
+      );
+    });
+  }
+
+  // Normalises a list setting value to a trimmed, non-empty string array.
+  parseListSetting(value) {
+    return (Array.isArray(value) ? value : (value?.split(",") ?? []))
+      .map((v) => String(v).trim())
+      .filter(Boolean);
+  }
+
+  get icon() {
+    return this.composer.isWhispering ? "far-eye-slash" : "far-eye";
   }
 
   get translatedLabel() {
@@ -70,7 +161,7 @@ export default class WhisperWarning extends Component {
       <DButton
         @preventFocus={{true}}
         @action={{this.toggleWhisper}}
-        @icon="far-eye-slash"
+        @icon={{this.icon}}
         class={{concatClass
           "whisper-hint"
           (if this.composer.isWhispering "whispering" "public")
