@@ -1,5 +1,11 @@
 en:
   theme_metadata:
     description: "This component better distinguishes a public reply from a whisper."
+    settings:
+      whisper_only: "Only show the warning button when composing a whisper; hide it for public replies."
+      show_in_read_restricted_categories: "Automatically show the warning when replying in categories that are not publicly visible."
+      show_in_group_pms: "Automatically show the warning when replying in a PM where you are a member of one of the allowed groups."
+      restrict_to_groups: "Limit the warning to members of specific groups. Leave empty to show for all users who can whisper."
+      restrict_to_categories: "Additional categories where the warning should appear. Works alongside the automatic read-restricted setting."
   public_reply: "reply will be visible"
   whispering: "whispering"
