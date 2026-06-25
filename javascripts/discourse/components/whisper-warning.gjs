@@ -14,7 +14,7 @@ export default class WhisperWarning extends Component {
     const composerAction = model.get("action");
 
     if (
-      !this.composer.showWhisperToggle ||
+      !this.composer.canToggleWhisper ||
       composerAction === "createTopic" ||
       composerAction === "createSharedDraft"
     ) {
