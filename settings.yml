@@ -8,9 +8,11 @@ show_in_group_pms:
   default: true
   type: bool
 restrict_to_groups:
-  default: ""
+  default: "1|2"
   type: list
   list_type: group
+  resolve_group_membership: true
+  disallowed_groups: "4"
 restrict_to_categories:
   default: ""
   type: list
