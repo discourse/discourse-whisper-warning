@@ -3,7 +3,7 @@
 RSpec.describe "Whisper Warning" do
   fab!(:admin)
   fab!(:moderator)
-  fab!(:group)
+  fab!(:hint_group, :group)
   fab!(:category)
   fab!(:read_restricted_category) { Fabricate(:private_category, group: Group[:staff]) }
   fab!(:topic) do
@@ -14,7 +14,7 @@ RSpec.describe "Whisper Warning" do
 
   before do
     SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
-    group.add(moderator)
+    hint_group.add(moderator)
     sign_in(moderator)
   end
 
@@ -25,8 +25,7 @@ RSpec.describe "Whisper Warning" do
   end
 
   def enable_whisper
-    find(".composer-actions").click
-    find("[data-value='toggle_whisper']").click
+    find("#reply-control .composer-whisper-indicator").click
   end
 
   context "with default settings" do
@@ -107,11 +106,12 @@ RSpec.describe "Whisper Warning" do
 
   context "with restrict_to_groups set" do
     before do
-      theme.update_setting(:restrict_to_groups, group.name)
+      theme.update_setting(:restrict_to_groups, hint_group.id)
       theme.save!
     end
 
     it "shows for users in the specified group" do
+      hint_group.add(admin)
       open_composer_for
       expect(page).to have_css(".whisper-hint")
     end
