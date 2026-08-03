@@ -25,7 +25,14 @@ RSpec.describe "Whisper Warning" do
   end
 
   def enable_whisper
-    find("#reply-control .composer-whisper-indicator").click
+    # Core exposes a dedicated whisper toggle button with the new composer
+    # actions UI; fall back to the composer actions dropdown on older versions.
+    if page.has_css?(".composer-whisper-indicator")
+      find(".composer-whisper-indicator").click
+    else
+      find(".composer-actions").click
+      find("[data-value='toggle_whisper']").click
+    end
   end
 
   context "with default settings" do
