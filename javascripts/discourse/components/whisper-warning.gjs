@@ -85,10 +85,16 @@ export default class WhisperWarning extends Component {
     );
   }
 
-  // Returns true if restrict_to_groups is empty, or the current user is a
-  // member of at least one specified group. Matches by both group ID and name
-  // to handle either storage format from the list_type: group setting.
   get isInAllowedGroup() {
+    if (Object.hasOwn(settings, "user_in_restrict_to_groups")) {
+      return settings.user_in_restrict_to_groups;
+    }
+
+    // TODO (martin) Remove this fallback after resolve_group_membership
+    // from core is available everywhere
+    //
+    // Old behaviour was to allow all logged-in users if no groups were configured,
+    // new behaviour is to allow logged in users only if they are in the configured group.
     const groups = this.parseListSetting(settings.restrict_to_groups);
 
     if (groups.length === 0) {
